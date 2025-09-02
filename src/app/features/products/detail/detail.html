@@ -1,0 +1,11 @@
+<p>detail works!</p>
+<a routerLink="/list">← Back to list</a>
+
+<ng-container *ngIf="product$ | async as p">
+  <h1>{{ p.title }}</h1>
+  <img [src]="p.thumbnail" [alt]="p.title" style="max-width:240px;display:block;margin:.5rem 0">
+  <p>{{ p.description }}</p>
+  <p><strong>Price:</strong> {{ p.price | currency }}</p>
+  <p><strong>Rating:</strong> {{ p.rating }}</p>
+  <p><strong>Brand:</strong> {{ p.brand }} — <strong>Category:</strong> {{ p.category }}</p>
+</ng-container>

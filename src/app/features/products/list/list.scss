@@ -1,0 +1,5 @@
+.toolbar { display:flex; gap:.5rem; align-items:center; margin-bottom: .75rem; }
+.grid { width:100%; border-collapse: collapse; }
+th, td { padding:.5rem .75rem; border-bottom:1px solid #e5e7eb; text-align:left; }
+.pager { display:flex; gap:.5rem; align-items:center; margin-top:.75rem; }
+.sr { position:absolute; left:-9999px; }

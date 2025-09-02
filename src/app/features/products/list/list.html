@@ -1,0 +1,77 @@
+<section class="toolbar">
+    <label for="q">Search products</label>
+    <input id="q" type="search" #q (input)="onSearch(q.value)"
+        placeholder="Type to search..." aria-describedby="q-help" />
+    <small id="q-help">Debounced & latest-request wins.</small>
+</section>
+
+<ng-container *ngIf="vm$ | async as vm">
+    <p class="summary">{{ vm.items.length }} of {{ vm.total }} items</p>
+
+    <table class="grid" role="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Rating</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let p of vm.items; trackBy: trackById">
+                <td>{{ p.title }}</td>
+                <td>{{ p.price | currency }}</td>
+                <td>{{ p.rating }}</td>
+                <td><a [routerLink]="['/detail', p.id]">View</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <nav class="pager" aria-label="Pagination" *ngIf="vm.pageCount > 1">
+        <button (click)="goToPage(0, vm.pageCount)" [disabled]="vm.page === 0">« First</button>
+        <button (click)="goToPage(vm.page - 1, vm.pageCount)" [disabled]="vm.page === 0">‹ Prev</button>
+        <span>Page {{ vm.page + 1 }} / {{ vm.pageCount }}</span>
+        <button (click)="goToPage(vm.page + 1, vm.pageCount)" [disabled]="vm.page >= vm.pageCount - 1">Next ›</button>
+        <button (click)="goToPage(vm.pageCount - 1, vm.pageCount)" [disabled]="vm.page >= vm.pageCount - 1">Last
+            »</button>
+    </nav>
+</ng-container>
+
+<hr>
+
+<form [formGroup]="addForm" (ngSubmit)="submitCreate()" novalidate>
+    <h2>Add product</h2>
+
+    <div>
+        <label for="title">Title</label>
+        <input id="title" formControlName="title" required aria-describedby="title-err" />
+        <div id="title-err" *ngIf="addForm.controls.title.touched && addForm.controls.title.invalid">
+            <small *ngIf="addForm.controls.title.errors?.['required']">Title is required.</small>
+            <small *ngIf="addForm.controls.title.errors?.['maxlength']">Max 60 chars.</small>
+        </div>
+    </div>
+
+    <div>
+        <label for="price">Price</label>
+        <input id="price" type="number" formControlName="price" required aria-describedby="price-err" />
+        <div id="price-err" *ngIf="addForm.controls.price.touched && addForm.controls.price.invalid">
+            <small *ngIf="addForm.controls.price.errors?.['required']">Price is required.</small>
+            <small *ngIf="addForm.controls.price.errors?.['min']">Minimum 1.</small>
+        </div>
+    </div>
+
+    <div>
+        <label for="description">Description</label>
+        <textarea id="description" formControlName="description" required aria-describedby="desc-err"></textarea>
+        <div id="desc-err" *ngIf="addForm.controls.description.touched && addForm.controls.description.invalid">
+            <small *ngIf="addForm.controls.description.errors?.['required']">Description is required.</small>
+            <small *ngIf="addForm.controls.description.errors?.['maxlength']">Max 200 chars.</small>
+        </div>
+    </div>
+
+    <div role="status" aria-live="polite" class="sr">
+        Form status: {{ formStatus() }}
+    </div>
+
+    <button type="submit" [disabled]="addForm.invalid">Create</button>
+</form>
